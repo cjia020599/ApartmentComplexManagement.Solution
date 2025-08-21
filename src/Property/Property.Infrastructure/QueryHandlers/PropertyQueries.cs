@@ -4,11 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Property.Application.Queries;
 using Property.Application.Response;
 using Property.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Property.Infrastructure.QueryHandlers
 {
@@ -29,12 +24,11 @@ namespace Property.Infrastructure.QueryHandlers
             .Where(p => p.Status == "Occupied")
             .ProjectTo<PropertyResponse>(_mapper.ConfigurationProvider)
             .ToListAsync();
-
         }
 
         public async Task<List<PropertyResponse>> GetAllPropertiesAsync()
         {
-           return await _context.Properties.ProjectTo<PropertyResponse>(_mapper.ConfigurationProvider).ToListAsync();
+            return await _context.Properties.ProjectTo<PropertyResponse>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         public async Task<List<PropertyResponse>> GetAllUnderMaintenanceProperties()

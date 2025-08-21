@@ -37,12 +37,13 @@ namespace Property.Domain.Entities
             {
                 throw new ArgumentException("Status cannot be null or empty.", nameof(status));
             }
-            if (status != "Vacant" || status != "Occupied" || status != "Under maintenance")
+            if (status == "Vacant" || status == "Occupied" || status == "Under maintenance")
             {
-                throw new ArgumentException("Invalid Status. Status must be either 'Vacant', 'Occupied', or 'Under maintenance'.", nameof(status));
+                Unit = unit;
+                Status = status;
+                return;
             }
-            Unit = unit;
-            Status = status;
+            throw new ArgumentException("Invalid Status. Status must be either 'Vacant', 'Occupied', or 'Under Maintenance'.", status);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Property.Controllers
         [HttpPost("/add")]
         public async Task<IActionResult> AddProperty([FromBody] AddPropertyRequest request)
         {
-            PropertyResponse property = await _commands.AddPropertiesAsync(request.Unit, HttpContext.RequestAborted);
+            PropertyResponse property = await _commands.AddPropertyAsync(request.Unit, HttpContext.RequestAborted);
             return CreatedAtAction(nameof(GetProperties), new { id = property.Id }, property);
         }
         [HttpDelete("/delete")]
@@ -47,37 +47,40 @@ namespace Property.Controllers
             return Ok(property);
         }
         [HttpGet("/getAllVacants")]
-        public async Task<IActionResult> GetVacantProperties(string? name)
+        public async Task<IActionResult> GetVacantProperties()
         {
-            PropertyResponse? property = await _queries.GetPropertyByUnitAsync(name);
-            if (property == null)
-            {
-                var properties = await _queries.GetAllPropertiesAsync();
-                return Ok(properties);
-            }
+            List<PropertyResponse> property = await _queries.GetAllVacantProperties();
             return Ok(property);
         }
         [HttpGet("/getAllOccupied")]
-        public async Task<IActionResult> GetOccupiedProperties(string? name)
+        public async Task<IActionResult> GetOccupiedProperties()
         {
-            PropertyResponse? property = await _queries.GetPropertyByUnitAsync(name);
-            if (property == null)
-            {
-                var properties = await _queries.GetAllPropertiesAsync();
-                return Ok(properties);
-            }
+            List<PropertyResponse> property = await _queries.GetAllOccupiedProperties();
             return Ok(property);
         }
         [HttpGet("/getAllUnderMaintenance")]
-        public async Task<IActionResult> GetUnderMaintenanceProperties(string? name)
+        public async Task<IActionResult> GetUnderMaintenanceProperties()
         {
-            PropertyResponse? property = await _queries.GetPropertyByUnitAsync(name);
-            if (property == null)
-            {
-                var properties = await _queries.GetAllPropertiesAsync();
-                return Ok(properties);
-            }
+            List<PropertyResponse> property = await _queries.GetAllUnderMaintenanceProperties();
             return Ok(property);
+        }
+        [HttpPost("/vancantUnit")]
+        public async Task<IActionResult> VacantUnit(string unit)
+        {
+            var property = await _commands.VacantPropertyAsync(unit, HttpContext.RequestAborted);
+            return CreatedAtAction(nameof(GetProperties), new { id = property }, property);
+        }
+        [HttpPost("/occupyUnit")]
+        public async Task<IActionResult> OccupyUnit(string unit)
+        {
+            var property = await _commands.OccupyPropertyAsync(unit, HttpContext.RequestAborted);
+            return CreatedAtAction(nameof(GetProperties), new { id = property }, property);
+        }
+        [HttpPost("/underMaintenanceUnit")]
+        public async Task<IActionResult> UnderMaintainanceUnit(string unit)
+        {
+            var property = await _commands.UnderMaintenancePropertyAsync(unit, HttpContext.RequestAborted);
+            return CreatedAtAction(nameof(GetProperties), new { id = property }, property);
         }
     }
 }
